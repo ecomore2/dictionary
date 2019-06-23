@@ -398,6 +398,37 @@ title wherever you want to display the reference list.
   margin-right: auto;
 }
 </style>
+<pre class="r"><code>&gt; library(dplyr)
+
+Attaching package: &#39;dplyr&#39;
+The following objects are masked from &#39;package:stats&#39;:
+
+    filter, lag
+The following objects are masked from &#39;package:base&#39;:
+
+    intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>&gt; if (!dir.exists(&quot;data&quot;)) dir.create(&quot;data&quot;)</code></pre>
+<pre class="r"><code>&gt; pacs &lt;- &quot;../pacs/data/pacs.csv&quot; %&gt;% 
++   readr::read_csv(col_types = paste(c(&quot;icfnD&quot;, rep(&quot;c&quot;, 5), rep(&quot;D&quot;, 4), rep(&quot;f&quot;, 3)), collapse = &quot;&quot;)) %&gt;% 
++   filter(province == &quot;Vientiane [prefecture]&quot;) %&gt;% 
++   select(district, village) %&gt;% 
++   unique() %&gt;% 
++   arrange(village, district) %&gt;% 
++   write.csv(&quot;data/pacs.csv&quot;, FALSE, row.names = FALSE)</code></pre>
+<pre class="r"><code>&gt; census &lt;- &quot;../census/data/census.csv&quot; %&gt;% 
++   readr::read_csv(col_types = paste(c(&quot;ddccciiiiilllc&quot;, rep(&quot;d&quot;, 246)), collapse = &quot;&quot;)) %&gt;% 
++   select(District_Name, Village_Name) %&gt;%
++   unique() %&gt;% 
++   arrange(Village_Name, District_Name) %&gt;% 
++   write.csv(&quot;data/census.csv&quot;, FALSE, row.names = FALSE)</code></pre>
+<pre class="r"><code>&gt; setdiff(tolower(census$Village_Name), pacs$village) %&gt;% 
++   sort()
+character(0)</code></pre>
+<pre class="r"><code>&gt; sort(unique(tolower(pacs$village)))
+character(0)</code></pre>
+<pre class="r"><code>&gt; sort(unique(tolower(census$Village_Name)))
+character(0)</code></pre>
+<pre class="r"><code>&gt; dictionary &lt;- readxl::read_excel(&quot;../../cleaned_data/Dictionnaire correspondance Census SIG liaison.xlsx&quot;)</code></pre>
 
 
 

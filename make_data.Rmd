@@ -8,6 +8,8 @@ output:
   pdf_document:
     toc: yes
 <!-- bibliography: references.bib -->
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!--
@@ -50,4 +52,47 @@ knitr::opts_chunk$set(margin = TRUE, prompt = TRUE, comment = "",
 options(width = 137)
 ```
 
+```{r}
+library(dplyr)
+```
+
+```{r}
+if (!dir.exists("data")) dir.create("data")
+```
+
+```{r}
+pacs <- "../pacs/data/pacs.csv" %>% 
+  readr::read_csv(col_types = paste(c("icfnD", rep("c", 5), rep("D", 4), rep("f", 3)), collapse = "")) %>% 
+  filter(province == "Vientiane [prefecture]") %>% 
+  select(district, village) %>% 
+  unique() %>% 
+  arrange(village, district) %>% 
+  write.csv("data/pacs.csv", FALSE, row.names = FALSE)
+```
+
+```{r}
+census <- "../census/data/census.csv" %>% 
+  readr::read_csv(col_types = paste(c("ddccciiiiilllc", rep("d", 246)), collapse = "")) %>% 
+  select(District_Name, Village_Name) %>%
+  unique() %>% 
+  arrange(Village_Name, District_Name) %>% 
+  write.csv("data/census.csv", FALSE, row.names = FALSE)
+```
+
+```{r}
+setdiff(tolower(census$Village_Name), pacs$village) %>% 
+  sort()
+```
+
+```{r}
+sort(unique(tolower(pacs$village)))
+```
+
+```{r}
+sort(unique(tolower(census$Village_Name)))
+```
+
+```{r}
+dictionary <- readxl::read_excel("../../cleaned_data/Dictionnaire correspondance Census SIG liaison.xlsx")
+```
 
